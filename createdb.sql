@@ -30,7 +30,7 @@ values
     ("phone", "телефон", false, "мабілка, мабільны, тэлефон"),
     ("books", "книги", false, "кніга, кнігі"),
     ("internet", "интернет", false, "інэт, байфлай, інтэрнэт"),
-    ("subscriptions", "падпіскі", false, "падпіскі"),
+    ("subscriptions", "падпіскі", false, "падпіска"),
     ("other", "іншае", true, "");
 
 insert into budget(codename, daily_limit) values ('base', 500);
