@@ -47,7 +47,7 @@ def get_today_statistics() -> str:
                    "from expense where date(created)=date('now', 'localtime')")
     result = cursor.fetchone()
     if not result[0]:
-        return "Сегодня ещё нет расходов"
+        return "Сёння яшчэ не было ніякіх выдаткаў"
     all_today_expenses = result[0]
     cursor.execute("select sum(amount) "
                    "from expense where date(created)=date('now', 'localtime') "
@@ -55,10 +55,9 @@ def get_today_statistics() -> str:
                    "from category where is_base_expense=true)")
     result = cursor.fetchone()
     base_today_expenses = result[0] if result[0] else 0
-    return (f"Расходы сегодня:\n"
-            f"всего — {all_today_expenses} руб.\n"
-            f"базовые — {base_today_expenses} руб. из {_get_budget_limit()} руб.\n\n"
-            f"За текущий месяц: /month")
+    return (f"Выдаткі за сёння:\n"
+            f"усяго — {all_today_expenses} руб.\n"
+            f"За цякучы месяц: /month")
 
 
 def get_month_statistics() -> str:
@@ -70,7 +69,7 @@ def get_month_statistics() -> str:
                    f"from expense where date(created) >= '{first_day_of_month}'")
     result = cursor.fetchone()
     if not result[0]:
-        return "В этом месяце ещё нет расходов"
+        return "У гэтым месяцы яшчэ няма выдаткаў"
     all_today_expenses = result[0]
     cursor.execute(f"select sum(amount) "
                    f"from expense where date(created) >= '{first_day_of_month}' "
@@ -78,10 +77,8 @@ def get_month_statistics() -> str:
                    f"from category where is_base_expense=true)")
     result = cursor.fetchone()
     base_today_expenses = result[0] if result[0] else 0
-    return (f"Расходы в текущем месяце:\n"
-            f"всего — {all_today_expenses} руб.\n"
-            f"базовые — {base_today_expenses} руб. из "
-            f"{now.day * _get_budget_limit()} руб.")
+    return (f"Выдаткі за цякучы месяц:\n"
+            f"усяго — {all_today_expenses} руб.\n")
 
 
 def last() -> List[Expense]:
@@ -108,8 +105,8 @@ def _parse_message(raw_message: str) -> Message:
     if not regexp_result or not regexp_result.group(0) \
             or not regexp_result.group(1) or not regexp_result.group(2):
         raise exceptions.NotCorrectMessage(
-            "Не могу понять сообщение. Напишите сообщение в формате, "
-            "например:\n1500 метро")
+            "Не магу зразумець паведамленне, напішы штосці кшталту:\n "
+            "4 кава")
 
     amount = regexp_result.group(1).replace(" ", "")
     category_text = regexp_result.group(2).strip().lower()
