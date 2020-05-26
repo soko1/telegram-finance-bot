@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Сервер Telegram бота, запускаемый непосредственно"""
 import logging
 import os
@@ -32,7 +34,7 @@ async def send_welcome(message: types.Message):
     await message.answer(
         "За цякучы дзень: /today\n"
         "За месяц: /month\n"
-        "Апошнія выдаткі: /expenses\n"
+        "Апошнія выдаткі: /last\n"
         "Даступныя катэгорыі: /categories")
 
 
@@ -68,7 +70,7 @@ async def month_statistics(message: types.Message):
     await message.answer(answer_message)
 
 
-@dp.message_handler(commands=['expenses'])
+@dp.message_handler(commands=['last'])
 async def list_expenses(message: types.Message):
     """Отправляет последние несколько записей о расходах"""
     last_expenses = expenses.last()
