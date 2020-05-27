@@ -103,13 +103,14 @@ def delete_expense(row_id: int) -> None:
 def _parse_message(raw_message: str) -> Message:
     """Парсит текст пришедшего сообщения о новом расходе."""
     # выуживаем цифру
-    regexp_digit = re.search(r"\d+", raw_message)
+    regexp_digit = re.search(r"\d+.\d+", raw_message)
     regexp_string = re.search(r"[аА-яЯ]+", raw_message)
     if not regexp_digit or not regexp_digit.group(0)\
         or not regexp_string or not regexp_string.group(0):
             raise exceptions.NotCorrectMessage("Не магу зразумець паведамленне, напішы штосці кшталту:\n 4 кава")
     
     amount = regexp_digit[0]
+    print(amount)
     name = regexp_string[0]
     category_text = name.strip().lower()
 
