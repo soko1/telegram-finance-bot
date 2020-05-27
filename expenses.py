@@ -57,7 +57,8 @@ def get_today_statistics() -> str:
     base_today_expenses = result[0] if result[0] else 0
     return (f"Выдаткі за сёння:\n"
             f"усяго — {all_today_expenses} руб.\n"
-            f"За цякучы месяц: /month")
+            f"За цякучы месяц: /month\n"
+            f"Апошнія выдаткі: /last")
 
 
 def get_month_statistics() -> str:
@@ -101,17 +102,18 @@ def delete_expense(row_id: int) -> None:
 
 def _parse_message(raw_message: str) -> Message:
     """Парсит текст пришедшего сообщения о новом расходе."""
-    regexp_result = re.match(r"([\d ]+) (.*)", raw_message)
-    if not regexp_result or not regexp_result.group(0) \
-            or not regexp_result.group(1) or not regexp_result.group(2):
-        raise exceptions.NotCorrectMessage(
-            "Не магу зразумець паведамленне, напішы штосці кшталту:\n "
-            "4 кава")
+    # выуживаем цифру
+    regexp_digit = re.search(r"\d+", raw_message)
+    regexp_string = re.search(r"[аА-яЯ]+", raw_message)
+    if not regexp_digit or not regexp_digit.group(0)\
+        or not regexp_string or not regexp_string.group(0):
+            raise exceptions.NotCorrectMessage("Не магу зразумець паведамленне, напішы штосці кшталту:\n 4 кава")
+    
+    amount = regexp_digit[0]
+    name = regexp_string[0]
+    category_text = name.strip().lower()
 
-    amount = regexp_result.group(1).replace(" ", "")
-    category_text = regexp_result.group(2).strip().lower()
     return Message(amount=amount, category_text=category_text)
-
 
 def _get_now_formatted() -> str:
     """Возвращает сегодняшнюю дату строкой"""
